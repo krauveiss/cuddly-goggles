@@ -51,6 +51,10 @@ class User extends Authenticatable implements JWTSubject
         return $this->getKey();
     }
 
+    public function orders(){
+        return $this->hasMany(Order::class);
+    }
+
     /**
      * Return a key value array, containing any custom claims to be added to the JWT.
      *
