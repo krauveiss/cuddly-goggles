@@ -1,0 +1,39 @@
+.header {
+    justify-content: space-between;
+    align-items: center;
+    display: flex;
+    padding: 10px 80px;
+}
+
+.title {
+    color: white;
+    font-family: 'Unbounded', sans-serif;
+    font-size: 16px;
+}
+
+nav {
+    font-family: 'Vela-Sans', sans-serif;
+    width: 250px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.auth {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.register {
+    font-size: 16px;
+    padding: 8px 16px;
+    background: linear-gradient(0deg, #BF01C9 0%, #BF01C9 100%);
+    border: none
+}
+
+.login {
+    font-size: 16px;
+    padding: 8px 16px;
+    background: none;
+    border: 1px solid #BF01C9;
+}

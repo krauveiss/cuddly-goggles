@@ -1,0 +1,7 @@
+.Form {
+    width: 250px;
+    gap: 20px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+}

@@ -1,4 +1,20 @@
 * {
     margin: 0;
     padding: 0;
+    font-family: 'Vela-Sans', sans-serif;
+    color: white;
+}
+
+@font-face {
+    font-family: 'Unbounded';
+    src: local('Unbounded'), url('./fonts/Unbounded.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Vela-Sans';
+    src: local('Vela Sans'), url('./fonts/VelaSans-Regular.ttf') format('truetype');
+}
+
+body {
+    background: #141414;
 }
