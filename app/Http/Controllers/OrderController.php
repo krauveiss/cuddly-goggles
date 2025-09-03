@@ -12,41 +12,44 @@ class OrderController extends Controller
      *
      * @return array
      */
-    public function index(){
+    public function index()
+    {
         $user = auth()->user();
-        
+
         $orders = $user->orders()->with('cargos')->get();
 
         return response()->json($orders);
     }
 
-    public function store(){
+    public function store()
+    {
         $validated = request()->validate([
-            'from_address'=>"required|string|max:255",
-            'to_address'=>"required|string|max:255",
-            'price'=>"numeric",
-            'cargos'=>"required|array|min:1",
-            'cargos.*.title'=>"required|string|max:255",
-            'cargos.*.weight'=>"required|numeric|min:0",
-            'cargos.*.type'=>"required|string|max:255",
-            'cargos.*.size'=>"required|string|max:255",
+            'from_address' => "required|string|max:255",
+            'to_address' => "required|string|max:255",
+            'price' => "numeric",
+            'cargos' => "required|array|min:1",
+            'cargos.*.title' => "required|string|max:255",
+            'cargos.*.weight' => "required|numeric|min:0",
+            'cargos.*.type' => "required|string|max:255",
+            'cargos.*.size' => "required|string|max:255",
         ]);
 
         $order = Order::create([
-            'user_id'=> auth()->id(),
+            'user_id' => auth()->id(),
             'status' => 'pending',
             'from_address' => $validated['from_address'],
             'to_address' => $validated['to_address'],
             'price' => $validated['price'] ?? 0,
         ]);
 
-        foreach($validated['cargos'] as $cargoData){
+        foreach ($validated['cargos'] as $cargoData) {
             $order->cargos()->create($cargoData);
         }
-        
-        return response()->json($order->load('cargos'),201);
+
+        return response()->json($order->load('cargos'), 201);
     }
 }
+
 /*
 {
   "from_address": "ул. Ленина, 1",
@@ -67,7 +70,4 @@ class OrderController extends Controller
     }
   ]
 }
-
-
-
-*\
+*/
