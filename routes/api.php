@@ -18,5 +18,5 @@ Route::group([
 Route::post('login', [AuthController::class,'login']);
 Route::post('register', [AuthController::class,'register']);
 Route::get('test',function(){
-    return response()->json(['popa'=>'chlen']);
+    return response()->json(['1'=>'123']);
 });
