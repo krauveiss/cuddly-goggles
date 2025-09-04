@@ -38,8 +38,8 @@ export default function Login() {
         })
         .then((res) => {
           console.log(res.data);
-          localStorage.setItem("token", res.data.access_token);
-          navigate("/");
+          localStorage.setItem("access_token", res.data.access_token);
+          navigate("/profile");
         })
         .catch((err) => {
           console.log(err);
