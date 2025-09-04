@@ -4,7 +4,6 @@ import { Prices } from "./Prices.js";
 import { useState } from "react";
 import axios from "axios";
 import { config } from "../../very secret files/config.js";
-import { redirect, useNavigate } from "react-router-dom";
 
 const API = config.server;
 
