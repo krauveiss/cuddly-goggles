@@ -13,7 +13,7 @@ public class UserApiService
     private readonly string _headerTelegram = "X-Telegram-Bot-Api-Secret-Token";
     private readonly string _token = "123";
     
-    public async Task<User> GetUserAsync(int userId)
+    public async Task<UserDto> GetUserAsync(int userId)
     {
         try
         {
@@ -21,7 +21,7 @@ public class UserApiService
             var response = await _client.GetAsync(_baseUrl + $"user/{userId}");
         
             var json = await response.Content.ReadAsStringAsync();
-            var admin = JsonSerializer.Deserialize<User>(json);
+            var admin = JsonSerializer.Deserialize<UserDto>(json);
         
             return admin;
         }

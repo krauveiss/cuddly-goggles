@@ -8,7 +8,7 @@ public class AdminVerifyMiddleware
 {
     private readonly RequestDelegate _next;
     private readonly UserApiService _userService;
-
+    private readonly string _secretKey = "FgLGlDh1YdiDXJ4i50Co98D45LPIVLorDz4An69XfXU2EzgoGvMrEfQgUdPkanOv";
     public AdminVerifyMiddleware(RequestDelegate next, UserApiService  userService)
     {
         this._next = next;
@@ -19,26 +19,10 @@ public class AdminVerifyMiddleware
     {
         var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
         var token = authHeader.Substring("Bearer ".Length).Trim();
-        var principal = ValidateToken(token);
-        
-        if (principal == null)
-        {
-            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            await context.Response.WriteAsync("Неверный токен");
-            return;
-        }
-        
-        context.User = principal;
-        
-        var userIdClaim = principal.FindFirst(ClaimTypes.NameIdentifier) ?? principal.FindFirst("sub");
-        if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var userId))
-        {
-            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            await context.Response.WriteAsync("User ID not found in token");
-            return;
-        }
 
-        if (await _userService.IsUserAdmin(userId))
+        var userIdClaim = ExtractUserIdFromTokenSimple(token);
+
+        if (!await _userService.IsUserAdmin(userIdClaim.Value))
         {
             context.Response.StatusCode = 403;
             await context.Response.WriteAsync("У вас нет прав доступа");
@@ -48,27 +32,61 @@ public class AdminVerifyMiddleware
             await _next.Invoke(context);
         }
     }
-    private ClaimsPrincipal? ValidateToken(string token)
+    private int? ExtractUserIdFromTokenSimple(string token)
     {
         try
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes("_secretKey");
+            var parts = token.Split('.');
+            if (parts.Length < 2) return null;
 
-            var validationParameters = new TokenValidationParameters
+            var payload = DecodeJwtPart(parts[1]);
+            if (string.IsNullOrEmpty(payload)) return null;
+
+            var subMatch = System.Text.RegularExpressions.Regex.Match(
+                payload, 
+                "\"sub\"\\s*:\\s*\"?([0-9]+)\"?"
+            );
+
+            if (subMatch.Success && int.TryParse(subMatch.Groups[1].Value, out var userId))
             {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(key),
-                ValidateIssuer = false, 
-                ValidateAudience = false, 
-                ValidateLifetime = false,
-                ClockSkew = TimeSpan.Zero
-            };
+                return userId;
+            }
 
-            var principal = tokenHandler.ValidateToken(token, validationParameters, out var validatedToken);
-            return principal;
+            var idMatch = System.Text.RegularExpressions.Regex.Match(
+                payload,
+                "\"(nameid|userId|id)\"\\s*:\\s*\"?([0-9]+)\"?"
+            );
+
+            if (idMatch.Success && int.TryParse(idMatch.Groups[2].Value, out var userId2))
+            {
+                return userId2;
+            }
+
+            return null;
         }
         catch
+        {
+            return null;
+        }
+    }
+    private string DecodeJwtPart(string base64Url)
+    {
+        try
+        {
+            var base64 = base64Url
+                .Replace('-', '+')
+                .Replace('_', '/');
+
+            switch (base64.Length % 4)
+            {
+                case 2: base64 += "=="; break;
+                case 3: base64 += "="; break;
+            }
+
+            var bytes = Convert.FromBase64String(base64);
+            return Encoding.UTF8.GetString(bytes);
+        }
+        catch (Exception ex)
         {
             return null;
         }
