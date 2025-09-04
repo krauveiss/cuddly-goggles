@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FuncController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\TelegramController;
 use App\Http\Middleware\VerifyTelegramWebhook;
@@ -25,11 +26,9 @@ Route::group([
     Route::get('orders/{order}',[OrderController::class,'show']);
     Route::put('orders/{order}',[OrderController::class,'update']);
     Route::delete('orders/{order}',[OrderController::class,'delete']);
+    //func
+    Route::post('func/settg',[FuncController::class,'settg']);
 
-    //employee
-
-
-    
 });
 
 //base user logic
@@ -39,12 +38,12 @@ Route::get('test',function(){
     return response()->json(['1'=>'123']);
 });
 
-//admin
+//telegram
+Route::group([
 
-Route::post('/telegram/webhook', [TelegramController::class, 'handleWebhook'])
-    ->withoutMiddleware(['auth:sanctum', 'verify.csrf'])
-    ->middleware(VerifyTelegramWebhook::class);
+    'middleware' => [VerifyTelegramWebhook::class],
 
-Route::get('admin/user/{user}',[AdminController::class,'show'])->middleware(VerifyTelegramWebhook::class);
-Route::get('admin/users',[AdminController::class,'index'])->middleware(VerifyTelegramWebhook::class);
-Route::get("admin/is-admin/{user}",[AdminController::class, 'checkadm'])->middleware(VerifyTelegramWebhook::class);
+], function () {
+Route::get('telegram/test',[TelegramController::class,'test']);
+
+});

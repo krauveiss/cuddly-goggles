@@ -11,21 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //должность, отдел, ФИО, телефон, др, 
-        Schema::create('employees', function (Blueprint $table) {
+        Schema::create('admins', function (Blueprint $table) {
             $table->id();
-            $table->string("position");
-            $table->string("department");
-            $table->string("DOB");
-            $table->string("name");
-            $table->string("phone");
+            $table->string('login');
+            $table->string('password');
             $table->timestamps();
         });
     }
 
-
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        Schema::dropIfExists('employees');
+        Schema::dropIfExists('admins');
     }
 };

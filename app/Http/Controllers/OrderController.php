@@ -38,11 +38,8 @@ class OrderController extends Controller
     }
 
     $validated = request()->validate([
-      'from_address' => "required|string|max:255",
-      'to_address' => "required|string|max:255",
-      'price' => "numeric",
-      'date_delivery'=> "required|string|max:11",
-      'type_delivery'=> "required|string|max:255",
+      'date_delivery' => "required|string|max:11",
+      'type_delivery' => "required|string|max:255",
       'cargos' => "required|array|min:1",
       'cargos.*.id' => "integer|exists:cargos,id",
       'cargos.*.title' => "required|string|max:255",
@@ -50,14 +47,14 @@ class OrderController extends Controller
       'cargos.*.type' => "required|string|max:255",
       'cargos.*.size' => "required|string|max:255",
     ]);
+
     $order->update([
       'user_id' => auth()->id(),
       'status' => 'pending',
+      'place' => 'client',
       'date' => $validated['date_delivery'],
       'type_delivery' => $validated['type_delivery'],
-      'from_address' => $validated['from_address'],
-      'to_address' => $validated['to_address'],
-      'price' => $validated['price'] ?? 0,
+      'price' => 99999,
     ]);
     foreach ($validated['cargos'] as $cargoData) {
       if (isset($cargoData['id'])) {
@@ -78,7 +75,8 @@ class OrderController extends Controller
     return response()->json(['status' => 'updated'], 200);
   }
 
-  public function delete(Order $order){
+  public function delete(Order $order)
+  {
     Gate::authorize('order-user', $order);
     $order->delete();
     return response()->json(['status' => 'deleted'], 200);
@@ -87,12 +85,10 @@ class OrderController extends Controller
   public function store()
   {
     $validated = request()->validate([
-      'from_address' => "required|string|max:255",
-      'to_address' => "required|string|max:255",
-      'price' => "numeric",
-      'date_delivery'=> "required|string|max:11",
-      'type_delivery'=> "required|string|max:255",
+      'date_delivery' => "required|string|max:11",
+      'type_delivery' => "required|string|max:255",
       'cargos' => "required|array|min:1",
+      'cargos.*.id' => "integer|exists:cargos,id",
       'cargos.*.title' => "required|string|max:255",
       'cargos.*.weight' => "required|numeric|min:0",
       'cargos.*.type' => "required|string|max:255",
@@ -102,11 +98,10 @@ class OrderController extends Controller
     $order = Order::create([
       'user_id' => auth()->id(),
       'status' => 'pending',
+      'place' => 'client',
       'date' => $validated['date_delivery'],
       'type_delivery' => $validated['type_delivery'],
-      'from_address' => $validated['from_address'],
-      'to_address' => $validated['to_address'],
-      'price' => $validated['price'] ?? 0,
+      'price' => 9999,
     ]);
 
     foreach ($validated['cargos'] as $cargoData) {
@@ -120,22 +115,21 @@ class OrderController extends Controller
 
 /*
 {
-  "from_address": "ул. Ленина, 1",
-  "to_address": "ул. Победы, 10",
-  "price": 500.00,
-  "cargos": [
-    {
-      "title": "Laptop",
-      "weight": 2,
-      "size": "30x20x5",
-      "type": "electronics"
-    },
-    {
-      "title": "Ship",
-      "weight": 3,
-      "size": "40x30x20",
-      "type": "electronics"
-    }
-  ]
+    "type_delivery": "test",
+    "date_delivery": "test",
+    "cargos": [
+        {
+            "title": "груз 3",
+            "weight": 2,
+            "size": "30x20x5",
+            "type": "electronics"
+        },
+        {
+            "title": "груз 4",
+            "weight": 3,
+            "size": "40x30x20",
+            "type": "fragile"
+        }
+    ]
 }
 */

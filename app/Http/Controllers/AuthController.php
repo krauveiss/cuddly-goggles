@@ -21,6 +21,8 @@ class AuthController extends Controller
 
         $user = User::create([
             'name' => $request->name,
+            'role' => "user",
+            'tg' => "",
             'email' => $request->email,
             'password' => $request->password,
         ]);
@@ -28,8 +30,6 @@ class AuthController extends Controller
         $token = Auth::login($user);
 
         return $this->respondWithToken($token);
-
-        
     }
 
     public function login(Request $request)

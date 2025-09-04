@@ -16,7 +16,11 @@ class VerifyTelegramWebhook
     public function handle(Request $request, Closure $next): Response
 
     {
+
         $secretToken = config('telegram.secret_token', env('TELEGRAM_SECRET_TOKEN'));
+        if ($secretToken == null) {
+            abort(403, 'secret token not assigned');
+        }
         if ($request->header('X-Telegram-Bot-Api-Secret-Token') !== $secretToken) {
             abort(403, 'Invalid secret token');
         }
