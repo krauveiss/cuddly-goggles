@@ -42,4 +42,5 @@ Route::post('/telegram/webhook', [TelegramController::class, 'handleWebhook'])
 
 
 //admin
-Route::get('user/{user}',[AdminController::class,'show'])->middleware(VerifyTelegramWebhook::class);
+Route::get('admin/user/{user}',[AdminController::class,'show'])->middleware(VerifyTelegramWebhook::class);
+Route::get('admin/users',[AdminController::class,'index'])->middleware(VerifyTelegramWebhook::class);

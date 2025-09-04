@@ -10,4 +10,7 @@ class AdminController extends Controller
     public function show(User $user){
         return response($user);
     }
+    public function index(){
+        return response()->json([User::all()]);
+    }
 }
