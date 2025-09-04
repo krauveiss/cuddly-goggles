@@ -1,5 +1,6 @@
 ﻿namespace FuryVibes.Contracts;
 
-public class Class1
+public class PackageDto
 {
+    
 }

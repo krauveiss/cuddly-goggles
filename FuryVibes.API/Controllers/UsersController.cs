@@ -16,6 +16,7 @@ public class UsersController : Controller
     [HttpGet("admin/{userId}")]
     public async Task<IActionResult> GetAdminAsync(int userId)
     {
-        return Ok(await _userRepository.GetAdminAsync(userId)); // ТЕСТОВО
+        var context = HttpContext;
+        return Ok(await _userRepository.GetUsersAsync()); 
     }
 }

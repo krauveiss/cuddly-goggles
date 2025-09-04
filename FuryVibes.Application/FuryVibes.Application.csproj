@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\FuryVibes.Contracts\FuryVibes.Contracts.csproj" />
       <ProjectReference Include="..\FuryVibes.Domain\FuryVibes.Domain.csproj" />
     </ItemGroup>
 

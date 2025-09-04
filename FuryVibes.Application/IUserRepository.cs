@@ -1,8 +1,11 @@
-﻿using FuryVibes.Domain;
+﻿using FuryVibes.Contracts;
+using FuryVibes.Domain;
 
 namespace FuryVibes.Application;
 
 public interface IUserRepository
 {
-    public Task<Admin> GetAdminAsync(int userId);
+    
+    public Task<User> GetUserAsync(int userId);
+    public Task<List<UserDto>> GetUsersAsync();
 }

@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\FuryVibes.Application\FuryVibes.Application.csproj" />
+      <ProjectReference Include="..\FuryVibes.Contracts\FuryVibes.Contracts.csproj" />
       <ProjectReference Include="..\FuryVibes.Domain\FuryVibes.Domain.csproj" />
     </ItemGroup>
 
