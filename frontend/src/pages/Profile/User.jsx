@@ -39,7 +39,7 @@ export default function User() {
       <div className={classes.Personal_packages}>
         <p className={classes.title}>Мои поссылки</p>
         <div className={classes.packages}>
-          <Package onClick={() => navigate(`/packages/${1}`)} />
+          <Package id={"2"} />
           <Package />
           <Package />
           <Package />
@@ -49,9 +49,16 @@ export default function User() {
   );
 }
 
-const Package = () => {
+const Package = ({ id }) => {
+  let navigate = useNavigate();
+
   return (
-    <div className={classes.Package}>
+    <div
+      onClick={() => {
+        navigate(`/packages/${id}`);
+      }}
+      className={classes.Package}
+    >
       <div className={classes.statusPackage}>
         <p className={classes.status}>Оформлен</p>
         <p className={classes.type}>Стандарт</p>
