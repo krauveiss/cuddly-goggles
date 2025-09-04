@@ -1,3 +1,137 @@
 .main {
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+}
 
+.Advertisement {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    margin: 40px auto 0 auto;
+
+    border: 1px solid #BF01C9;
+
+    .left {
+        padding: 80px;
+        padding-right: 0;
+
+        .title {
+            font-size: 48px;
+            font-family: 'Unbounded', sans-serif;
+        }
+
+        .description {
+            margin-top: 32px;
+            margin-bottom: 64px;
+            font-family: 'Vela-Sans', sans-serif;
+            font-size: 24px;
+        }
+
+        .btns {
+            display: flex;
+            gap: 32px;
+            
+            .BtnTest {
+                font-family: "Vela-Sans", sans-serif;
+                border: none;
+                font-size: 24px;
+                padding: 24px 40px;
+                background: #BF01C9;
+            }
+
+            .Detailed {
+                font-family: "Vela-Sans", sans-serif;
+                font-size: 24px;
+                padding: 24px 40px;
+                background: none;
+                border: 1px solid #BF01C9;
+
+            }
+        }
+
+    }
+
+    img {
+        width: 50%;
+    }
+}
+
+.Choose {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    margin: 40px auto 0 auto;
+
+    border: 1px solid #BF01C9;
+
+    .ChoosenText {
+        padding: 40px;
+
+        img {
+
+        }
+
+        .title {
+            font-size: 48px;
+            font-family: 'Unbounded', sans-serif;
+        }
+
+        .description {
+            margin-top: 32px;
+            font-family: 'Vela-Sans', sans-serif;
+            font-size: 24px;
+        }
+    }
+}
+
+.Rate {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    margin: 40px auto 0 auto;
+
+    border: 1px solid #BF01C9;
+
+    .title {
+        font-family: 'Unbounded', sans-serif;
+        padding: 40px;
+        font-size: 40px;
+    }
+
+    .Rates {
+        padding: 40px 40px;
+        display: flex;
+        justify-content: space-between;
+    }
+}
+
+.Plan {
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    border: 1px solid #BF01C9;
+    background: #1D191F;
+    padding: 32px 24px;
+
+    .titles {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 32px;
+        font-family: 'Unbounded', sans-serif;
+        margin-bottom: 10px;
+    }
+
+    .description {
+        font-size: 24px;
+    }
+
+    .Test {
+        margin-top: 32px;
+        font-size: 24px;
+        padding: 24px 40px;
+        background: #BF01C9;
+        border: none;
+    }
 }

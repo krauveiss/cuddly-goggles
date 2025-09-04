@@ -1,7 +1,79 @@
+
 .Form {
-    width: 250px;
-    gap: 20px;
-    color: white;
-    display: flex;
-    flex-direction: column;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: 400px;
+    .title {
+        font-size: 32px;
+        font-family: 'Unbounded', sans-serif;
+        text-align: center;
+        margin-bottom: 32px;
+    }
+
+    .inputs {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 8px;
+        margin-bottom: 24px;
+
+        p {
+            font-size: 16px;
+            font-family: 'Vela-Sans', sans-serif;
+        }
+
+        input {
+            background: none;
+            font-size: 16px;
+            font-family: 'Vela-Sans', sans-serif;
+            font-weight: 500;
+            border: 1px solid #BF01C9;
+            height: 40px;
+            padding: 0 16px;
+            outline: none;
+        }
+
+
+
+    }
+
+    .error {
+        margin-top: -20px;
+        display: flex;
+        flex-direction: column;
+        p {
+            color: #BF01C9;
+        }
+    }
+
+    button {
+        padding: 16px 24px;
+        font-size: 16px;
+        font-weight: 500;
+        width: 100%;
+        background: linear-gradient(0deg, #BF01C9 0%, #BF01C9 100%);
+        border: none;
+
+        margin-top: 28px;
+    }
+
+    .account {
+        width: auto;
+        margin: 10px auto;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+
+        .enter {
+            color: #BF01C9;
+            font-weight: 500;
+            cursor: pointer;
+        }
+    }
+
+
 }
