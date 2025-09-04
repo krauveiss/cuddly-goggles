@@ -1,17 +1,12 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\TelegramController;
 use App\Http\Middleware\VerifyTelegramWebhook;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-Route::options('/{any}', function () {
-    return response()->json([], 200)
-        ->header('Access-Control-Allow-Origin', '*')
-        ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-        ->header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Telegram-Bot-Api-Secret-Token');
-})->where('any', '.*');
 
 
 Route::group([
@@ -44,3 +39,7 @@ Route::get('test',function(){
 Route::post('/telegram/webhook', [TelegramController::class, 'handleWebhook'])
     ->withoutMiddleware(['auth:sanctum', 'verify.csrf'])
     ->middleware(VerifyTelegramWebhook::class);
+
+
+//admin
+Route::get('user/{user}',[AdminController::class,'show'])->middleware(VerifyTelegramWebhook::class);
