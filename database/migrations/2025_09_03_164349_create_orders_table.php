@@ -18,6 +18,8 @@ return new class extends Migration
             $table->enum('status', ['pending', 'in_progress', 'delivered', 'cancelled'])->default('pending');
             $table->string('from_address');
             $table->string('to_address');
+            $table->string('date');
+            $table->string('type_delivery');
             $table->float('price');
             $table->timestamps();
         });
