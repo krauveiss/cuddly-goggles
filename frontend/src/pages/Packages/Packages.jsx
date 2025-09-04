@@ -2,6 +2,11 @@ import Header from "../../shared/Header/Header.jsx";
 import classes from "./Packages.module.css";
 import { Prices } from "./Prices.js";
 import { useState } from "react";
+import axios from "axios";
+import { config } from "../../very secret files/config.js";
+import { redirect, useNavigate } from "react-router-dom";
+
+const API = config.server;
 
 export default function Packages() {
   const [selectedPayment, setSelectedPayment] = useState("");
@@ -19,6 +24,46 @@ export default function Packages() {
       ...prevState,
       [name]: data,
     }));
+  };
+
+  let navigate = useNavigate();
+
+  const CreateOrder = () => {
+    const date = new Date();
+    const orderInfos = {
+      from_address: "Томск",
+      to_address: "Космос",
+      date_delivery: `${date.getDay()}.${date.getMonth() + 1}.${date.getFullYear()}`,
+      type_delivery: "SECRET",
+      price: dInfo.price * dInfo.weight,
+      title: dInfo.type,
+      cargos: [
+        {
+          title: dInfo.type,
+          weight: dInfo.weight,
+          size: "small",
+          type: dInfo.delivery,
+        },
+      ],
+    };
+
+    console.log(orderInfos);
+
+    axios
+      .post(`${API}/php/api/orders`, orderInfos, {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        navigate(`/order/${res.data.id}`);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -124,12 +169,7 @@ export default function Packages() {
                   `Цена будет расчитана после указания веса посылки и тарифа`
                 )}
               </p>
-              <button
-                onClick={() => {
-                  console.log(dInfo);
-                }}
-                className={classes.btnOrder}
-              >
+              <button onClick={CreateOrder} className={classes.btnOrder}>
                 Оформить посылку
               </button>
             </div>
