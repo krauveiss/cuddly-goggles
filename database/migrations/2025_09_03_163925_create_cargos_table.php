@@ -12,15 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cargos', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(Order::class)->constrained()->cascadeOnDelete();
-            $table->string("title");
-            $table->decimal('weight');
-            $table->string("size");
-            $table->string("type");
-            $table->timestamps();
-        });
+        
     }
 
     /**

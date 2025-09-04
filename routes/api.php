@@ -26,6 +26,9 @@ Route::group([
     Route::put('orders/{order}',[OrderController::class,'update']);
     Route::delete('orders/{order}',[OrderController::class,'delete']);
 
+    //employee
+
+
     
 });
 
@@ -36,11 +39,12 @@ Route::get('test',function(){
     return response()->json(['1'=>'123']);
 });
 
+//admin
+
 Route::post('/telegram/webhook', [TelegramController::class, 'handleWebhook'])
     ->withoutMiddleware(['auth:sanctum', 'verify.csrf'])
     ->middleware(VerifyTelegramWebhook::class);
 
-
-//admin
 Route::get('admin/user/{user}',[AdminController::class,'show'])->middleware(VerifyTelegramWebhook::class);
 Route::get('admin/users',[AdminController::class,'index'])->middleware(VerifyTelegramWebhook::class);
+Route::get("admin/is-admin/{user}",[AdminController::class, 'checkadm'])->middleware(VerifyTelegramWebhook::class);
