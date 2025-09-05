@@ -1,0 +1,89 @@
+.Profile {
+    gap: 24px;
+    margin: 40px auto;
+    width: 90%;
+
+    .title {
+        font-size: 32px;
+        font-family: 'Unbounded', sans-serif;
+    }
+
+    .personal_info {
+
+        margin-top: 32px;
+
+        width: 40%;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+
+        .info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+
+
+            input {
+                height: 40px;
+                background: #1D191F;
+                outline: none;
+                border: none;
+                padding: 0 16px;
+            }
+        }
+    }
+}
+
+.Personal_packages {
+    gap: 24px;
+    margin: 40px auto;
+    width: 90%;
+
+    .title {
+        font-size: 32px;
+        font-family: 'Unbounded', sans-serif;
+    }
+
+    .packages {
+        margin-top: 32px;
+        display: grid;
+        grid-template-columns: repeat(5, 280px);
+        gap: 32px;
+    }
+}
+
+.Package {
+    cursor: pointer;
+    background: #1D191F;
+    padding: 32px;
+    
+    .statusPackage {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 24px;
+
+        .status {
+            padding: 4px 8px;
+            border: 1px solid #BF01C9;
+            background: #BF01C9;
+        }
+
+        .type {
+            padding: 4px 8px;
+            border: 1px solid #BF01C9;
+            background: none;
+            color: #BF01C9;
+        }
+    }
+
+    .id {
+        font-family: 'Unbounded', sans-serif;
+        margin-bottom: 24px;
+    }
+}
+
+.TGBUTTON {
+    padding: 8px 24px;
+    background: #BF01C9;
+    border: none;
+}

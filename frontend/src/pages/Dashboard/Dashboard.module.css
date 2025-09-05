@@ -1,0 +1,667 @@
+.container {
+    min-height: 100vh;
+    background-color: #f5f5f5;
+}
+
+.main {
+    padding: 24px;
+}
+
+.content {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.content h2 {
+    margin-top: 0;
+    color: #333;
+}
+
+.header {
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #FFF;
+    position: relative;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header p {
+    color: #131313;
+    margin: 0;
+}
+
+.header .title {
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+}
+
+.header nav {
+    width: 40%;
+    display: flex;
+    gap: 16px;
+    position: relative;
+}
+
+.navItemWrapper {
+    display: flex;
+    align-items: center;
+}
+
+.navItemContainer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 24px;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+}
+
+.navIcon {
+    width: 20px;
+    height: 20px;
+    transition: filter 0.3s ease;
+}
+
+.header nav p.choosen {
+    color: white;
+}
+
+.navItemContainer:hover p {
+    color: #BF01C9;
+}
+
+.navItemContainer:hover .navIcon {
+    filter: invert(27%) sepia(90%) saturate(2878%) hue-rotate(285deg) brightness(104%) contrast(97%);
+}
+
+.indicator {
+    position: absolute;
+    background: #BF01C9;
+    border-radius: 24px;
+    z-index: 0;
+    opacity: 0;
+}
+
+.logoutButton {
+    padding: 0.5rem 1rem;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.logoutButton:hover {
+    background-color: #c82333;
+}
+
+.stats {
+    display: flex;
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.statCard {
+    background: #f8f9fa;
+    padding: 16px;
+    border-radius: 8px;
+    flex: 1;
+    text-align: center;
+}
+
+.controls {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.controlButton {
+    padding: 10px 16px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.controlButton:hover {
+    background: #0056b3;
+}
+
+.statusActive {
+    color: green;
+    font-weight: bold;
+}
+
+.sectionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.usersCount {
+    color: #6c757d;
+    font-size: 14px;
+}
+
+.refreshButton {
+    padding: 8px 16px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.refreshButton:hover:not(:disabled) {
+    background: #0056b3;
+}
+
+.refreshButton:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+}
+
+.loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    gap: 12px;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    text-align: center;
+    gap: 12px;
+}
+
+.errorIcon {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+.retryButton {
+    padding: 8px 16px;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.retryButton:hover {
+    background: #c82333;
+}
+
+.tableContainer {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    color: #000000;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    padding: 16px;
+    text-align: left;
+    font-weight: 600;
+    color: #000000;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.table td {
+    padding: 16px;
+    border-bottom: 1px solid #e9ecef;
+    color: #000000;
+}
+
+.table tr:hover {
+    background-color: #f8f9fa;
+}
+
+.table tr:hover td {
+    color: #000000;
+}
+
+.userName {
+    font-weight: 500;
+    color: #000000;
+}
+
+.userId {
+    color: #000000;
+    font-family: monospace;
+    opacity: 0.8;
+}
+
+.tgCell {
+    font-family: monospace;
+    font-size: 12px;
+    background-color: #f8f9fa;
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    color: #000000;
+}
+
+.roleBadge {
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 500;
+    color: white;
+}
+
+.roleBadge.admin {
+    background: #dc3545;
+}
+
+.roleBadge.user {
+    background: #28a745;
+}
+
+.roleBadge.moderator {
+    background: #ffc107;
+    color: #000;
+}
+
+.verified {
+    color: #000000;
+    font-weight: bold;
+}
+
+.notVerified {
+    color: #000000;
+    opacity: 0.5;
+}
+
+.noData {
+    text-align: center;
+    padding: 40px;
+    color: #000000;
+    font-style: italic;
+    opacity: 0.7;
+}
+
+.table * {
+    color: #000000;
+}
+
+.tableContainer {
+    margin-top: 20px;
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+}
+
+.userGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.userCard {
+    background: #f8f9fa;
+    padding: 16px;
+    border-radius: 8px;
+}
+
+.userStatus {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    background: #28a745;
+    color: white;
+}
+
+.userStatus:not([class*="Активен"]) {
+    background: #dc3545;
+}
+
+.staffList {
+    margin-top: 20px;
+}
+
+.staffItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 12px;
+}
+
+.staffInfo h3 {
+    margin: 0 0 4px 0;
+}
+
+.staffInfo p {
+    margin: 0;
+    color: #666;
+}
+
+.staffSchedule {
+    color: #666;
+}
+
+.roleButton {
+    padding: 6px 12px;
+    background: #17a2b8;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+}
+
+.roleButton:hover:not(:disabled) {
+    background: #138496;
+}
+
+.roleButton:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+}
+
+.alreadyWorker {
+    color: #28a745;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.miniSpinner {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.roleBadge.worker {
+    background: #17a2b8;
+}
+
+@media (max-width: 1200px) {
+    .tableContainer {
+        overflow-x: auto;
+    }
+
+    .table {
+        min-width: 800px;
+    }
+
+    .roleButton {
+        padding: 4px 8px;
+        font-size: 11px;
+    }
+}
+
+.orderId {
+    font-family: monospace;
+    font-weight: 500;
+    color: #000000;
+}
+
+.statusBadge {
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 500;
+    color: white;
+}
+
+.statusBadge.pending {
+    background: #ffc107;
+    color: #000;
+}
+
+.statusBadge.processing {
+    background: #17a2b8;
+}
+
+.statusBadge.completed {
+    background: #28a745;
+}
+
+.statusBadge.cancelled {
+    background: #dc3545;
+}
+
+.price {
+    font-weight: 600;
+    color: #000000;
+}
+
+.viewButton {
+    padding: 6px 12px;
+    background: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.2s;
+}
+
+.viewButton:hover {
+    background: #5a6268;
+}
+
+.ordersCount {
+    color: #6c757d;
+    font-size: 14px;
+}
+
+@media (max-width: 1400px) {
+    .tableContainer {
+        overflow-x: auto;
+    }
+
+    .ordersTable {
+        min-width: 1000px;
+    }
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    color: #000000;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    padding: 16px;
+    text-align: left;
+    font-weight: 600;
+    color: #000000;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.table td {
+    padding: 16px;
+    border-bottom: 1px solid #e9ecef;
+    color: #000000;
+}
+
+.table tr:hover {
+    background-color: #f8f9fa;
+}
+
+.table tr:hover td {
+    color: #000000;
+}
+
+.orderId {
+    font-family: monospace;
+    font-weight: 500;
+    color: #000000;
+}
+
+.cargoTitle {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.statusBadge {
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 500;
+    color: white;
+}
+
+.statusBadge.pending {
+    background: #ffc107;
+    color: #000;
+}
+
+.statusBadge.in_progress {
+    background: #17a2b8;
+}
+
+.statusBadge.delivered {
+    background: #28a745;
+}
+
+.statusBadge.cancelled {
+    background: #dc3545;
+}
+
+.price {
+    font-weight: 600;
+    color: #000000;
+}
+
+.statusSelect {
+    padding: 6px 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    background: white;
+    color: #000000;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.statusSelect:disabled {
+    background: #e9ecef;
+    cursor: not-allowed;
+}
+
+.statusSelect:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.noStatusChange {
+    color: #6c757d;
+    font-size: 12px;
+    font-style: italic;
+}
+
+.viewButton {
+    padding: 6px 12px;
+    background: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.2s;
+}
+
+.viewButton:hover {
+    background: #5a6268;
+}
+
+.ordersCount {
+    color: #6c757d;
+    font-size: 14px;
+}
+
+@media (max-width: 1600px) {
+    .tableContainer {
+        overflow-x: auto;
+    }
+
+    .table {
+        min-width: 1200px;
+    }
+}
+.selectLoading {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border: 2px solid rgba(0, 0, 0, 0.3);
+    border-top: 2px solid #000;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 5px;
+}

@@ -1,0 +1,130 @@
+.Packages {
+    width: 85%;
+    margin: 40px auto;
+
+    .maintitle {
+        display: inline-flex;
+        font-size: 32px;
+        font-family: 'Unbounded', sans-serif;
+    }
+
+    .Packages1 {
+        padding: 40px;
+        display: flex;
+        justify-content: space-around;
+        gap: 100px;
+
+        .left {
+            width: 60%;
+
+            display: flex;
+            flex-direction: column;
+
+            .form {
+                display: flex;
+                flex-direction: column;
+                gap: 24px;
+
+                .inputs {
+                    display: flex;
+                    flex-direction: column;
+
+                    gap: 8px;
+
+                    input {
+                        width: 100%;
+                        border: 1px solid #BF01C9;
+                        height: 40px;
+                        outline: none;
+                        background: none;
+                        padding: 0 16px;
+                    }
+                }
+
+            }
+
+            .prices {
+                margin: 40px auto;
+                width: 101%;
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 40px;
+            }
+
+            .payment {
+                margin-top: 16px;
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+
+                .pay {
+                    display: flex;
+                    gap: 10px;
+                }
+            }
+
+        }
+
+        .right {
+            width: 40%;
+            .order {
+
+                display: flex;
+                flex-direction: column;
+                gap: 24px;
+                padding: 32px;
+                background: #1D191F;
+
+                .title {
+                    font-size: 32px;
+                    font-family: 'Unbounded', sans-serif;
+                }
+
+                .btnOrder {
+                    font-size: 24px;
+                    padding: 16px 24px;
+                    background: #BF01C9;
+                    border: none;
+                }
+            }
+            }
+        .description {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+
+    }
+}
+
+.PricePreview {
+    border: 0 solid #BF01C9;
+    display: flex;
+    flex-direction: column;
+
+    padding: 32px;
+    gap: 24px;
+
+    background: #1D191F;
+
+    .Price_title {
+        font-size: 16px;
+        font-family: 'Unbounded', sans-serif;
+    }
+}
+
+.PricePreview:hover {
+    cursor: pointer;
+    border: 1px solid #BF01C9;
+
+}
+
+.cost {
+    display: flex;
+    justify-content: space-between;
+
+    .price {
+        font-family: 'Unbounded', sans-serif;
+    }
+}
