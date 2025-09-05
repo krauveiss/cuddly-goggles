@@ -1,35 +1,479 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import classes from "./Dashboard.module.css";
 import { config } from "../../very secret files/config.js";
 
 const API = config.server;
 
 // Компоненты для каждого раздела
-const DashboardContent = () => (
-  <div className={classes.content}>
-    <h2>Дашборд</h2>
-    <p>Здесь отображается общая статистика и аналитика</p>
-    <div className={classes.stats}>
-      <div className={classes.statCard}>Всего пользователей: 1,243</div>
-      <div className={classes.statCard}>Активных заказов: 57</div>
-      <div className={classes.statCard}>Выполнено сегодня: 12</div>
-    </div>
-  </div>
-);
+const DashboardContent = () => {
+  const [stats, setStats] = useState({
+    totalUsers: 0,
+    activeOrders: 0,
+    activeWorkers: 0,
+    elevatorStatus: "pending",
+    recentOrders: [],
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-const ElevatorContent = () => (
-  <div className={classes.content}>
-    <h2>Управление лифтом</h2>
-    <p>
-      Статус лифта: <span className={classes.statusActive}>В работе</span>
-    </p>
-    <div className={classes.controls}>
-      <button className={classes.controlButton}>Запустить</button>
-      <button className={classes.controlButton}>Остановить</button>
-      <button className={classes.controlButton}>Экстренная остановка</button>
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+
+  const fetchDashboardData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const [usersResponse, ordersResponse, elevatorResponse] =
+        await Promise.all([
+          axios.get(`${API}/dotnet/api/admin/users`),
+          axios.get(`${API}/dotnet/api/admin/orders`),
+          axios.get(`${API}/dotnet/api/admin/elevator`),
+        ]);
+
+      const users = usersResponse.data;
+      const orders = ordersResponse.data;
+      const elevator = elevatorResponse.data;
+
+      const activeWorkers = users.filter(
+        (user) => user.role === "worker",
+      ).length;
+
+      const recentOrders = orders
+        .sort(
+          (a, b) =>
+            new Date(b.cargos?.[0]?.createdAt || b.createdAt) -
+            new Date(a.cargos?.[0]?.createdAt || a.createdAt),
+        )
+        .slice(0, 5);
+
+      setStats({
+        totalUsers: users.length,
+        activeOrders: orders.filter(
+          (order) =>
+            order.status === "in_progress" || order.status === "pending",
+        ).length,
+        activeWorkers,
+        elevatorStatus: elevator.status,
+        recentOrders,
+      });
+    } catch (err) {
+      const errorMessage =
+        err.response?.data?.message || err.message || "Произошла ошибка";
+      setError(errorMessage);
+      console.error("Ошибка при загрузке данных:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formatStatus = (status) => {
+    const statusMap = {
+      pending: "Ожидание",
+      in_progress: "В движении",
+      delivered: "Доставлен",
+      canceled: "Отменен",
+    };
+    return statusMap[status] || status;
+  };
+
+  const getStatusColor = (status) => {
+    const colorMap = {
+      pending: "#ffc107",
+      in_progress: "#17a2b8",
+      delivered: "#28a745",
+      canceled: "#dc3545",
+    };
+    return colorMap[status] || "#6c757d";
+  };
+
+  if (loading) {
+    return (
+      <div className={classes.content}>
+        <div className={classes.sectionHeader}>
+          <h2>Дашборд</h2>
+          <button
+            onClick={fetchDashboardData}
+            className={classes.refreshButton}
+            disabled
+          >
+            Обновить
+          </button>
+        </div>
+        <div className={classes.loading}>
+          <div className={classes.spinner}></div>
+          Загрузка данных...
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={classes.content}>
+        <div className={classes.sectionHeader}>
+          <h2>Дашборд</h2>
+          <button
+            onClick={fetchDashboardData}
+            className={classes.refreshButton}
+          >
+            Обновить
+          </button>
+        </div>
+        <div className={classes.error}>
+          <div className={classes.errorIcon}>⚠️</div>
+          <p>Ошибка при загрузке: {error}</p>
+          <button onClick={fetchDashboardData} className={classes.retryButton}>
+            Попробовать снова
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={classes.content}>
+      <div className={classes.sectionHeader}>
+        <h2>Дашборд</h2>
+        <button onClick={fetchDashboardData} className={classes.refreshButton}>
+          Обновить
+        </button>
+      </div>
+
+      <div className={classes.dashboardGrid}>
+        <div className={classes.statsSection}>
+          <h3>Ключевые метрики</h3>
+          <div className={classes.stats}>
+            <div className={classes.statCard}>
+              <div className={classes.statInfo}>
+                <div className={classes.statNumber}>{stats.totalUsers}</div>
+                <div className={classes.statLabel}>Всего пользователей</div>
+              </div>
+            </div>
+
+            <div className={classes.statCard}>
+              <div className={classes.statInfo}>
+                <div className={classes.statNumber}>{stats.activeOrders}</div>
+                <div className={classes.statLabel}>Активных заказов</div>
+              </div>
+            </div>
+
+            <div className={classes.statCard}>
+              <div className={classes.statInfo}>
+                <div className={classes.statNumber}>{stats.activeWorkers}</div>
+                <div className={classes.statLabel}>Активных работников</div>
+              </div>
+            </div>
+
+            <div className={classes.statCard}>
+              <div className={classes.statInfo}>
+                <div
+                  className={classes.statNumber}
+                  style={{ color: getStatusColor(stats.elevatorStatus) }}
+                >
+                  {formatStatus(stats.elevatorStatus)}
+                </div>
+                <div className={classes.statLabel}>Статус лифта</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className={classes.recentOrdersSection}>
+          <h3>Последние заказы</h3>
+          <div className={classes.ordersList}>
+            {stats.recentOrders.length > 0 ? (
+              stats.recentOrders.map((order) => (
+                <div key={order.id} className={classes.orderItem}>
+                  <div className={classes.orderHeader}>
+                    <span className={classes.orderId}>#{order.id}</span>
+                    <span
+                      className={classes.orderStatus}
+                      style={{ color: getStatusColor(order.status) }}
+                    >
+                      {formatStatus(order.status)}
+                    </span>
+                  </div>
+                  <div className={classes.orderDetails}>
+                    <span className={classes.orderTitle}>
+                      {order.cargos?.[0]?.title || "Без названия"}
+                    </span>
+                    <span className={classes.orderPrice}>{order.price} ₽</span>
+                  </div>
+                  <div className={classes.orderDate}>
+                    {new Date(
+                      order.cargos?.[0]?.createdAt || order.createdAt,
+                    ).toLocaleDateString("ru-RU")}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className={classes.noOrders}>Нет recentних заказов</div>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-);
+  );
+};
+
+const ElevatorContent = () => {
+  const [elevatorData, setElevatorData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [actionLoading, setActionLoading] = useState(false);
+
+  useEffect(() => {
+    fetchElevatorData();
+  }, []);
+
+  const fetchElevatorData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await axios.get(`${API}/dotnet/api/admin/elevator`);
+      setElevatorData(response.data);
+    } catch (err) {
+      const errorMessage =
+        err.response?.data?.message || err.message || "Произошла ошибка";
+      setError(errorMessage);
+      console.error("Ошибка при загрузке данных лифта:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const startElevator = async () => {
+    try {
+      setActionLoading(true);
+
+      const response = await axios.put(
+        `${API}/dotnet/api/admin/elevator/start`,
+      );
+
+      console.log("Лифт запущен");
+      await fetchElevatorData();
+    } catch (err) {
+      const errorMessage =
+        err.response?.data?.message ||
+        err.message ||
+        "Ошибка при запуске лифта";
+      alert(errorMessage);
+      console.error("Ошибка при запуске лифта:", err);
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const cancelElevator = async () => {
+    try {
+      setActionLoading(true);
+
+      const response = await axios.put(
+        `${API}/dotnet/api/admin/elevator/cancel`,
+      );
+
+      console.log("Лифт остановлен");
+      await fetchElevatorData();
+    } catch (err) {
+      const errorMessage =
+        err.response?.data?.message ||
+        err.message ||
+        "Ошибка при остановке лифта";
+      alert(errorMessage);
+      console.error("Ошибка при остановке лифта:", err);
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const formatStatus = (status) => {
+    const statusMap = {
+      pending: "Ожидание",
+      in_progress: "В движении",
+      delivered: "Доставлен",
+      canceled: "Отменен",
+    };
+    return statusMap[status] || status;
+  };
+
+  const getStatusColor = (status) => {
+    const colorMap = {
+      pending: "#ffc107",
+      in_progress: "#17a2b8",
+      delivered: "#28a745",
+      canceled: "#dc3545",
+    };
+    return colorMap[status] || "#6c757d";
+  };
+
+  const metersToKilometers = (meters) => {
+    return (meters / 1000).toFixed(2);
+  };
+
+  if (loading) {
+    return (
+      <div className={classes.content}>
+        <div className={classes.sectionHeader}>
+          <h2>Управление лифтом</h2>
+          <button
+            onClick={fetchElevatorData}
+            className={classes.refreshButton}
+            disabled
+          >
+            Обновить
+          </button>
+        </div>
+        <div className={classes.loading}>
+          <div className={classes.spinner}></div>
+          Загрузка данных лифта...
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={classes.content}>
+        <div className={classes.sectionHeader}>
+          <h2>Управление лифтом</h2>
+          <button onClick={fetchElevatorData} className={classes.refreshButton}>
+            Обновить
+          </button>
+        </div>
+        <div className={classes.error}>
+          <div className={classes.errorIcon}>⚠️</div>
+          <p>Ошибка при загрузке: {error}</p>
+          <button onClick={fetchElevatorData} className={classes.retryButton}>
+            Попробовать снова
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={classes.content}>
+      <div className={classes.sectionHeader}>
+        <h2>Управление лифтом</h2>
+        <button onClick={fetchElevatorData} className={classes.refreshButton}>
+          Обновить
+        </button>
+      </div>
+
+      {elevatorData && (
+        <div className={classes.elevatorContainer}>
+          <div className={classes.elevatorCard}>
+            <h3>Текущее состояние лифта</h3>
+
+            <div className={classes.elevatorInfo}>
+              <div className={classes.infoRow}>
+                <span className={classes.infoLabel}>Статус:</span>
+                <span
+                  className={classes.infoValue}
+                  style={{ color: getStatusColor(elevatorData.status) }}
+                >
+                  {formatStatus(elevatorData.status)}
+                </span>
+              </div>
+
+              <div className={classes.infoRow}>
+                <span className={classes.infoLabel}>Текущая нагрузка:</span>
+                <span className={classes.infoValue}>
+                  {elevatorData.workload.toLocaleString()} кг
+                </span>
+              </div>
+
+              <div className={classes.infoRow}>
+                <span className={classes.infoLabel}>Скорость:</span>
+                <span className={classes.infoValue}>
+                  {elevatorData.speed} м/с
+                </span>
+              </div>
+
+              <div className={classes.infoRow}>
+                <span className={classes.infoLabel}>Осталось пройти:</span>
+                <span className={classes.infoValue}>
+                  {metersToKilometers(elevatorData.remainDistance)} км
+                </span>
+              </div>
+            </div>
+
+            <div className={classes.progressContainer}>
+              <div className={classes.progressLabel}>
+                Пройдено расстояния:{" "}
+                {metersToKilometers(500 - elevatorData.remainDistance)}км /{" "}
+                {metersToKilometers(500)}км
+              </div>
+              <div className={classes.progressBar}>
+                <div
+                  className={classes.progressFill}
+                  style={{
+                    width: `${((500 - elevatorData.remainDistance) / 500) * 100}%`,
+                  }}
+                ></div>
+              </div>
+            </div>
+
+            <div className={classes.controls}>
+              <button
+                onClick={startElevator}
+                disabled={
+                  actionLoading || elevatorData.status === "in_progress"
+                }
+                className={classes.controlButton}
+              >
+                {actionLoading ? (
+                  <span className={classes.buttonSpinner}></span>
+                ) : (
+                  "Запустить лифт"
+                )}
+              </button>
+
+              <button
+                onClick={cancelElevator}
+                disabled={
+                  actionLoading || elevatorData.status !== "in_progress"
+                }
+                className={`${classes.controlButton} ${classes.cancelButton}`}
+              >
+                {actionLoading ? (
+                  <span className={classes.buttonSpinner}></span>
+                ) : (
+                  "Остановить лифт"
+                )}
+              </button>
+            </div>
+          </div>
+
+          <div className={classes.statusInfo}>
+            <h4>Статусы лифта:</h4>
+            <ul className={classes.statusList}>
+              <li>
+                <span style={{ color: "#ffc107" }}>●</span> Ожидание - лифт
+                готов к работе
+              </li>
+              <li>
+                <span style={{ color: "#17a2b8" }}>●</span> В движении - лифт
+                выполняет подъем
+              </li>
+              <li>
+                <span style={{ color: "#28a745" }}>●</span> Доставлен - груз
+                успешно доставлен
+              </li>
+              <li>
+                <span style={{ color: "#dc3545" }}>●</span> Отменен - операция
+                прервана
+              </li>
+            </ul>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 // Компонент для отображения заказов
 const OrdersContent = () => {
@@ -37,6 +481,7 @@ const OrdersContent = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [updatingOrderId, setUpdatingOrderId] = useState(null);
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
 
   useEffect(() => {
     fetchOrders();
@@ -59,6 +504,53 @@ const OrdersContent = () => {
     }
   };
 
+  const handleSortChange = (e) => {
+    const value = e.target.value;
+    if (value === "none") {
+      setSortConfig({ key: null, direction: "asc" });
+    } else {
+      const [key, direction] = value.split("-");
+      setSortConfig({ key, direction });
+    }
+  };
+
+  const sortedOrders = useMemo(() => {
+    if (!sortConfig.key) return orders;
+
+    return [...orders].sort((a, b) => {
+      let aValue, bValue;
+
+      switch (sortConfig.key) {
+        case "price":
+          aValue = a.price;
+          bValue = b.price;
+          break;
+        case "status":
+          aValue = a.status;
+          bValue = b.status;
+          break;
+        case "date":
+          aValue = new Date(a.cargos?.[0]?.createdAt || a.createdAt);
+          bValue = new Date(b.cargos?.[0]?.createdAt || b.createdAt);
+          break;
+        case "delivery":
+          aValue = a.typeDelivery;
+          bValue = b.typeDelivery;
+          break;
+        default:
+          return 0;
+      }
+
+      if (aValue < bValue) {
+        return sortConfig.direction === "asc" ? -1 : 1;
+      }
+      if (aValue > bValue) {
+        return sortConfig.direction === "asc" ? 1 : -1;
+      }
+      return 0;
+    });
+  }, [orders, sortConfig]);
+
   const updateOrderStatus = async (orderId, newStatus) => {
     try {
       setUpdatingOrderId(orderId);
@@ -67,7 +559,6 @@ const OrdersContent = () => {
         `${API}/dotnet/api/admin/order/${orderId}/status/${newStatus}`,
       );
 
-      // Обновляем данные заказа после успешного изменения
       setOrders((prevOrders) =>
         prevOrders.map((order) =>
           order.id === orderId ? { ...order, status: newStatus } : order,
@@ -87,7 +578,6 @@ const OrdersContent = () => {
     }
   };
 
-  // Функция для форматирования статуса
   const formatStatus = (status) => {
     const statusMap = {
       pending: "Ожидание",
@@ -98,7 +588,6 @@ const OrdersContent = () => {
     return statusMap[status] || status;
   };
 
-  // Функция для форматирования типа доставки
   const formatDeliveryType = (type) => {
     const typeMap = {
       SECRET: "Секретная",
@@ -108,7 +597,6 @@ const OrdersContent = () => {
     return typeMap[type] || type;
   };
 
-  // Доступные статусы для изменения
   const getAvailableStatuses = (currentStatus) => {
     const statusFlow = {
       pending: ["in_progress", "cancelled"],
@@ -117,6 +605,11 @@ const OrdersContent = () => {
       cancelled: [],
     };
     return statusFlow[currentStatus] || [];
+  };
+
+  const getCurrentSortValue = () => {
+    if (!sortConfig.key) return "none";
+    return `${sortConfig.key}-${sortConfig.direction}`;
   };
 
   if (loading) {
@@ -166,6 +659,27 @@ const OrdersContent = () => {
         <h2>Заказы</h2>
         <div className={classes.actions}>
           <span className={classes.ordersCount}>Всего: {orders.length}</span>
+          <div className={classes.sortContainer}>
+            <label htmlFor="sortSelect" className={classes.sortLabel}>
+              Сортировка:
+            </label>
+            <select
+              id="sortSelect"
+              onChange={handleSortChange}
+              value={getCurrentSortValue()}
+              className={classes.sortSelect}
+            >
+              <option value="none">Без сортировки</option>
+              <option value="price-asc">Цена (по возрастанию)</option>
+              <option value="price-desc">Цена (по убыванию)</option>
+              <option value="status-asc">Статус (А-Я)</option>
+              <option value="status-desc">Статус (Я-А)</option>
+              <option value="delivery-asc">Тип доставки (А-Я)</option>
+              <option value="delivery-desc">Тип доставки (Я-А)</option>
+              <option value="date-asc">Дата (сначала старые)</option>
+              <option value="date-desc">Дата (сначала новые)</option>
+            </select>
+          </div>
           <button onClick={fetchOrders} className={classes.refreshButton}>
             Обновить
           </button>
@@ -189,8 +703,8 @@ const OrdersContent = () => {
             </tr>
           </thead>
           <tbody>
-            {orders.length > 0 ? (
-              orders.map((order) => {
+            {sortedOrders.length > 0 ? (
+              sortedOrders.map((order) => {
                 const availableStatuses = getAvailableStatuses(order.status);
 
                 return (
@@ -457,31 +971,7 @@ const UsersContent = () => {
   );
 };
 
-const StaffContent = () => (
-  <div className={classes.content}>
-    <h2>Персонал</h2>
-    <div className={classes.staffList}>
-      <div className={classes.staffItem}>
-        <div className={classes.staffInfo}>
-          <h3>Алексей Оператор</h3>
-          <p>Оператор лифта</p>
-        </div>
-        <div className={classes.staffSchedule}>
-          <span>Смена: 08:00-20:00</span>
-        </div>
-      </div>
-      <div className={classes.staffItem}>
-        <div className={classes.staffInfo}>
-          <h3>Елена Техник</h3>
-          <p>Технический специалист</p>
-        </div>
-        <div className={classes.staffSchedule}>
-          <span>Смена: 10:00-22:00</span>
-        </div>
-      </div>
-    </div>
-  </div>
-);
+const StaffContent = () => <></>;
 
 // Компонент для пунктов навигации
 const NavItem = ({ name, icon, isActive, onClick }) => {
@@ -504,7 +994,6 @@ const AdminHeader = ({ activeItem, setActiveItem }) => {
     { name: "Лифт", icon: "elevator" },
     { name: "Заказы", icon: "orders" },
     { name: "Пользователи", icon: "users" },
-    { name: "Персонал", icon: "staff" },
   ];
 
   useEffect(() => {

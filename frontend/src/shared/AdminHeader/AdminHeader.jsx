@@ -23,7 +23,6 @@ export default function AdminHeader() {
     { name: "Лифт", icon: "elevator" },
     { name: "Заказы", icon: "orders" },
     { name: "Пользователи", icon: "users" },
-    { name: "Персонал", icon: "staff" },
   ];
 
   useEffect(() => {
