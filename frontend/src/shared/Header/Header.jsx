@@ -63,7 +63,13 @@ export default function Header({ name }) {
       </p>
 
       <nav>
-        <p>Главная</p>
+        <p
+          onClick={() => {
+            navigate("/");
+          }}
+        >
+          Главная
+        </p>
         <p
           onClick={() => {
             navigate("/packages");

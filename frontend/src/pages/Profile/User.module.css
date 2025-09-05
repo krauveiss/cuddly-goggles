@@ -81,3 +81,9 @@
         margin-bottom: 24px;
     }
 }
+
+.TGBUTTON {
+    padding: 8px 24px;
+    background: #BF01C9;
+    border: none;
+}

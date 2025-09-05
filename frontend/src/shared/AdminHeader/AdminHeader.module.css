@@ -1,0 +1,80 @@
+.header {
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #FFF;
+    position: relative;
+}
+
+.header p {
+    color: #131313;
+    margin: 0;
+}
+
+.header .title {
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+}
+
+.header nav {
+    width: 40%;
+    display: flex;
+    gap: 16px;
+    position: relative;
+}
+
+.navItemWrapper {
+    display: flex;
+    align-items: center;
+}
+
+.navItemContainer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 24px;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+}
+
+.navIcon {
+    width: 20px;
+    height: 20px;
+    transition: filter 0.3s ease;
+}
+
+.header nav p.choosen {
+    color: white;
+}
+
+.navItemContainer:hover p {
+    color: #BF01C9;
+}
+
+.navItemContainer:hover .navIcon {
+    filter: invert(27%) sepia(90%) saturate(2878%) hue-rotate(285deg) brightness(104%) contrast(97%);
+}
+
+.indicator {
+    position: absolute;
+    background: #BF01C9;
+    border-radius: 24px;
+    z-index: 0;
+    opacity: 0;
+}
+
+.logoutButton {
+    padding: 0.5rem 1rem;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.logoutButton:hover {
+    background-color: #c82333;
+}

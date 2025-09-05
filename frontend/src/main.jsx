@@ -9,6 +9,7 @@ import User from "./pages/Profile/User.jsx";
 import Packages from "./pages/Packages/Packages.jsx";
 import RecipePage from "./pages/Packages/Receipt.jsx";
 import PackageInfo from "./pages/Profile/PackageInfo.jsx";
+import Dashboard from "./pages/Dashboard/Dashboard.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -21,6 +22,7 @@ createRoot(document.getElementById("root")).render(
         <Route path="/packages" element={<Packages />} />
         <Route path="/packages/:id" element={<PackageInfo />} />
         <Route path="/order/:id" element={<RecipePage />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,

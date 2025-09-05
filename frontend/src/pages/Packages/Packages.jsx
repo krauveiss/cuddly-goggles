@@ -4,6 +4,7 @@ import { Prices } from "./Prices.js";
 import { useState } from "react";
 import axios from "axios";
 import { config } from "../../very secret files/config.js";
+import { useNavigate } from "react-router-dom";
 
 const API = config.server;
 
@@ -30,11 +31,8 @@ export default function Packages() {
   const CreateOrder = () => {
     const date = new Date();
     const orderInfos = {
-      from_address: "Томск",
-      to_address: "Космос",
       date_delivery: `${date.getDay()}.${date.getMonth() + 1}.${date.getFullYear()}`,
-      type_delivery: "SECRET",
-      price: dInfo.price * dInfo.weight,
+      type_delivery: dInfo.delivery,
       title: dInfo.type,
       cargos: [
         {

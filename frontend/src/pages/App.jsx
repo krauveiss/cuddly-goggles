@@ -1,6 +1,7 @@
 import classes from "./App.module.css";
 import Header from "../shared/Header/Header.jsx";
 import Footer from "../shared/Footer/Footer.jsx";
+import { useNavigate } from "react-router-dom";
 
 const Rates = [
   {
@@ -69,6 +70,7 @@ const Rates = [
 ];
 
 export default function Main() {
+  let navigate = useNavigate();
   return (
     <div className={classes.main}>
       <Header />
@@ -81,8 +83,22 @@ export default function Main() {
             Земли на орбиту быстро, безопасно и по выгодным ценам
           </p>
           <div className={classes.btns}>
-            <button className={classes.BtnTest}>Попробовать</button>
-            <button className={classes.Detailed}>Подробнее</button>
+            <button
+              onClick={() => {
+                navigate("/packages");
+              }}
+              className={classes.BtnTest}
+            >
+              Попробовать
+            </button>
+            <button
+              onClick={() => {
+                window.location = "https://cyberdom.moscow/spaces";
+              }}
+              className={classes.Detailed}
+            >
+              Подробнее
+            </button>
           </div>
         </div>
         <img src="/mainpage1.png" alt="No image" />

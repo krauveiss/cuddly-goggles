@@ -1,0 +1,292 @@
+.container {
+    min-height: 100vh;
+    background-color: #f5f5f5;
+}
+
+.main {
+    padding: 24px;
+}
+
+.content {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.content h2 {
+    margin-top: 0;
+    color: #333;
+}
+
+/* Стили для заголовка */
+.header {
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #FFF;
+    position: relative;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header p {
+    color: #131313;
+    margin: 0;
+}
+
+.header .title {
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+}
+
+.header nav {
+    width: 40%;
+    display: flex;
+    gap: 16px;
+    position: relative;
+}
+
+.navItemWrapper {
+    display: flex;
+    align-items: center;
+}
+
+.navItemContainer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 24px;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+}
+
+.navIcon {
+    width: 20px;
+    height: 20px;
+    transition: filter 0.3s ease;
+}
+
+.header nav p.choosen {
+    color: white;
+}
+
+.navItemContainer:hover p {
+    color: #BF01C9;
+}
+
+.navItemContainer:hover .navIcon {
+    filter: invert(27%) sepia(90%) saturate(2878%) hue-rotate(285deg) brightness(104%) contrast(97%);
+}
+
+.indicator {
+    position: absolute;
+    background: #BF01C9;
+    border-radius: 24px;
+    z-index: 0;
+    opacity: 0;
+}
+
+.logoutButton {
+    padding: 0.5rem 1rem;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.logoutButton:hover {
+    background-color: #c82333;
+}
+
+/* Стили для контента */
+.stats {
+    display: flex;
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.statCard {
+    background: #f8f9fa;
+    padding: 16px;
+    border-radius: 8px;
+    flex: 1;
+    text-align: center;
+}
+
+.controls {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.controlButton {
+    padding: 10px 16px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.controlButton:hover {
+    background: #0056b3;
+}
+
+.statusActive {
+    color: green;
+    font-weight: bold;
+}
+
+.tableContainer {
+    margin-top: 20px;
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+}
+
+.userGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.userCard {
+    background: #f8f9fa;
+    padding: 16px;
+    border-radius: 8px;
+}
+
+.userStatus {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    background: #28a745;
+    color: white;
+}
+
+.userStatus:not([class*="Активен"]) {
+    background: #dc3545;
+}
+
+.staffList {
+    margin-top: 20px;
+}
+
+.staffItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 12px;
+}
+
+.staffInfo h3 {
+    margin: 0 0 4px 0;
+}
+
+.staffInfo p {
+    margin: 0;
+    color: #666;
+}
+
+.staffSchedule {
+    color: #666;
+}
+
+/* Стили для секции пользователей */
+.sectionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.refreshButton {
+    padding: 8px 16px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.refreshButton:hover {
+    background: #0056b3;
+}
+
+.loading, .error {
+    text-align: center;
+    padding: 40px;
+    font-size: 18px;
+}
+
+.error {
+    color: #dc3545;
+}
+
+.retryButton {
+    margin-top: 10px;
+    padding: 8px 16px;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.retryButton:hover {
+    background: #c82333;
+}
+
+.tgCell {
+    font-family: monospace;
+    font-size: 12px;
+}
+
+.roleBadge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    color: white;
+}
+
+.roleBadge.admin {
+    background: #dc3545;
+}
+
+.roleBadge.user {
+    background: #28a745;
+}
+
+.roleBadge.moderator {
+    background: #ffc107;
+    color: #000;
+}
+
+.noData {
+    text-align: center;
+    padding: 20px;
+    color: #6c757d;
+}
