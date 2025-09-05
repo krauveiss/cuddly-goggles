@@ -1,4 +1,4 @@
-namespace FuryVibes.Domain;
+namespace FuryVibes.Domain.Enums;
 
 public enum PackageType
 {

@@ -1,6 +1,6 @@
-﻿namespace FuryVibes.Contracts;
+﻿namespace FuryVibes.Domain.Models;
 
-public class OrderDto
+public partial class Order
 {
     public ulong Id { get; set; }
 
@@ -20,5 +20,5 @@ public class OrderDto
 
     public DateTime? UpdatedAt { get; set; }
 
-    public virtual ICollection<CargoDto> Cargos { get; set; } = new List<CargoDto>();
+    public virtual ICollection<Cargo> Cargos { get; set; } = new List<Cargo>();
 }

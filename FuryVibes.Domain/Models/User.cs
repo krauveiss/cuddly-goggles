@@ -1,6 +1,6 @@
-﻿namespace FuryVibes.Contracts;
+﻿namespace FuryVibes.Domain.Models;
 
-public class UserDto
+public partial class User
 {
     public ulong Id { get; set; }
 
@@ -10,9 +10,13 @@ public class UserDto
 
     public string Email { get; set; } = null!;
 
-    public string Tg { get; set; } = null!;
+    public string? Tg { get; set; }
 
     public DateTime? EmailVerifiedAt { get; set; }
+
+    public string Password { get; set; } = null!;
+
+    public string? RememberToken { get; set; }
 
     public DateTime? CreatedAt { get; set; }
 
