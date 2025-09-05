@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(User::class);
             $table->enum('status', ['pending', 'in_progress', 'delivered', 'cancelled'])->default('pending');
-            $table->enum('place', ['client', 'warehouse', 'elevator'])->default('pending');
+            $table->enum('place', ['client', 'warehouse', 'elevator'])->default('client');
             $table->string('date');
             $table->string('type_delivery');
             $table->float('price');

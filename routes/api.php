@@ -16,26 +16,25 @@ Route::group([
 
 ], function () {
     //base user logic
-    Route::post('logout', [AuthController::class,'logout']);
+    Route::post('logout', [AuthController::class, 'logout']);
     Route::post('refresh', 'AuthController@refresh');
-    Route::post('me', [AuthController::class,'me']);
+    Route::post('me', [AuthController::class, 'me']);
 
     //order
-    Route::get('orders',[OrderController::class,'index']);
-    Route::post('orders',[OrderController::class,'store']);
-    Route::get('orders/{order}',[OrderController::class,'show']);
-    Route::put('orders/{order}',[OrderController::class,'update']);
-    Route::delete('orders/{order}',[OrderController::class,'delete']);
+    Route::get('orders', [OrderController::class, 'index']);
+    Route::post('orders', [OrderController::class, 'store']);
+    Route::get('orders/{order}', [OrderController::class, 'show']);
+    Route::put('orders/{order}', [OrderController::class, 'update']);
+    Route::delete('orders/{order}', [OrderController::class, 'delete']);
     //func
-    Route::post('func/settg',[FuncController::class,'settg']);
-
+    Route::post('func/settg', [FuncController::class, 'settg']);
 });
 
 //base user logic
-Route::post('login', [AuthController::class,'login']);
-Route::post('register', [AuthController::class,'register']);
-Route::get('test',function(){
-    return response()->json(['1'=>'123']);
+Route::post('login', [AuthController::class, 'login']);
+Route::post('register', [AuthController::class, 'register']);
+Route::get('test', function () {
+    return response()->json(['1' => '123']);
 });
 
 //telegram
@@ -44,6 +43,13 @@ Route::group([
     'middleware' => [VerifyTelegramWebhook::class],
 
 ], function () {
-Route::get('telegram/test',[TelegramController::class,'test']);
-
+    Route::get('telegram/test', [TelegramController::class, 'test']);
+    Route::post('telegram/getuser', [TelegramController::class, 'getuser']);
+    Route::post('telegram/order', [TelegramController::class, 'createorder']);
+    Route::post('telegram/orders', [TelegramController::class, 'getorders']);
+    Route::post('telegram/deleteorder/{order}', [TelegramController::class, 'cancelorder']);
+    Route::post('telegram/service/orders', [TelegramController::class, 'serviceOrders']);
+    Route::post('telegram/service/changestatus/{order}', [TelegramController::class, 'changeOrderStatus']);
+    Route::post('telegram/service/changeplace/{order}', [TelegramController::class, 'changeOrderPlace']);
 });
+

@@ -95,18 +95,32 @@ class OrderController extends Controller
       'cargos.*.size' => "required|string|max:255",
     ]);
 
+
+    $mult = 1;
+
+    switch ($validated['type_delivery']) {
+      case "Минимум":
+        $mult *= 100;
+        break;
+      case "Стандарт":
+        $mult *= 200;
+        break;
+      case "Экспресс":
+        $mult *= 400;
+        break;
+    }
     $order = Order::create([
       'user_id' => auth()->id(),
       'status' => 'pending',
       'place' => 'client',
       'date' => $validated['date_delivery'],
+      'price' => $validated['cargos'][0]['weight'] * $mult,
       'type_delivery' => $validated['type_delivery'],
-      'price' => 9999,
     ]);
-
     foreach ($validated['cargos'] as $cargoData) {
       $order->cargos()->create($cargoData);
     }
+
 
     return response()->json($order->load('cargos'), 201);
   }
