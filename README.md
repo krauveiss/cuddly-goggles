@@ -19,5 +19,5 @@
 Прем грузов у клиентов
 Отгрузка грузов из склада в лифт
 
-Dashboard - https://drive.google.com/file/d/1Rr2utNInOk58v5YnPLL9w92q4QzQYd06/view?usp=drive_link
+Dashboard - https://drive.google.com/file/d/1Rr2utNInOk58v5YnPLL9w92q4QzQYd06/view?usp=drive_link](https://drive.google.com/file/d/1Rr2utNInOk58v5YnPLL9w92q4QzQYd06/view?usp=sharing
 Client - https://drive.google.com/file/d/1uT4HPmk4zL_SMzFrzHHIVfz2QDksAUwX/view?usp=sharing
