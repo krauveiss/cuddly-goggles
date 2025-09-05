@@ -31,45 +31,256 @@ const ElevatorContent = () => (
   </div>
 );
 
-const OrdersContent = () => (
-  <div className={classes.content}>
-    <h2>Заказы</h2>
-    <div className={classes.tableContainer}>
-      <table className={classes.table}>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Клиент</th>
-            <th>Статус</th>
-            <th>Дата</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>#12345</td>
-            <td>Иван Иванов</td>
-            <td>В процессе</td>
-            <td>12.05.2023</td>
-          </tr>
-          <tr>
-            <td>#12346</td>
-            <td>Петр Петров</td>
-            <td>Завершен</td>
-            <td>11.05.2023</td>
-          </tr>
-        </tbody>
-      </table>
+// Компонент для отображения заказов
+const OrdersContent = () => {
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [updatingOrderId, setUpdatingOrderId] = useState(null);
+
+  useEffect(() => {
+    fetchOrders();
+  }, []);
+
+  const fetchOrders = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await axios.get(`${API}/dotnet/api/admin/orders`);
+      setOrders(response.data);
+    } catch (err) {
+      const errorMessage =
+        err.response?.data?.message || err.message || "Произошла ошибка";
+      setError(errorMessage);
+      console.error("Ошибка при загрузке заказов:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateOrderStatus = async (orderId, newStatus) => {
+    try {
+      setUpdatingOrderId(orderId);
+
+      const response = await axios.put(
+        `${API}/dotnet/api/admin/order/${orderId}/status/${newStatus}`,
+      );
+
+      // Обновляем данные заказа после успешного изменения
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
+          order.id === orderId ? { ...order, status: newStatus } : order,
+        ),
+      );
+
+      console.log(`Статус заказа ${orderId} изменен на ${newStatus}`);
+    } catch (err) {
+      const errorMessage =
+        err.response?.data?.message ||
+        err.message ||
+        "Ошибка при изменении статуса";
+      alert(errorMessage);
+      console.error("Ошибка при изменении статуса:", err);
+    } finally {
+      setUpdatingOrderId(null);
+    }
+  };
+
+  // Функция для форматирования статуса
+  const formatStatus = (status) => {
+    const statusMap = {
+      pending: "Ожидание",
+      in_progress: "В процессе",
+      delivered: "Доставлен",
+      cancelled: "Отменен",
+    };
+    return statusMap[status] || status;
+  };
+
+  // Функция для форматирования типа доставки
+  const formatDeliveryType = (type) => {
+    const typeMap = {
+      SECRET: "Секретная",
+      STANDARD: "Стандартная",
+      EXPRESS: "Экспресс",
+    };
+    return typeMap[type] || type;
+  };
+
+  // Доступные статусы для изменения
+  const getAvailableStatuses = (currentStatus) => {
+    const statusFlow = {
+      pending: ["in_progress", "cancelled"],
+      in_progress: ["delivered", "cancelled"],
+      delivered: [],
+      cancelled: [],
+    };
+    return statusFlow[currentStatus] || [];
+  };
+
+  if (loading) {
+    return (
+      <div className={classes.content}>
+        <div className={classes.sectionHeader}>
+          <h2>Заказы</h2>
+          <button
+            onClick={fetchOrders}
+            className={classes.refreshButton}
+            disabled
+          >
+            Обновить
+          </button>
+        </div>
+        <div className={classes.loading}>
+          <div className={classes.spinner}></div>
+          Загрузка заказов...
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={classes.content}>
+        <div className={classes.sectionHeader}>
+          <h2>Заказы</h2>
+          <button onClick={fetchOrders} className={classes.refreshButton}>
+            Обновить
+          </button>
+        </div>
+        <div className={classes.error}>
+          <div className={classes.errorIcon}>⚠️</div>
+          <p>Ошибка при загрузке: {error}</p>
+          <button onClick={fetchOrders} className={classes.retryButton}>
+            Попробовать снова
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={classes.content}>
+      <div className={classes.sectionHeader}>
+        <h2>Заказы</h2>
+        <div className={classes.actions}>
+          <span className={classes.ordersCount}>Всего: {orders.length}</span>
+          <button onClick={fetchOrders} className={classes.refreshButton}>
+            Обновить
+          </button>
+        </div>
+      </div>
+
+      <div className={classes.tableContainer}>
+        <table className={classes.table}>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Название груза</th>
+              <th>Статус</th>
+              <th>Дата</th>
+              <th>Тип доставки</th>
+              <th>Цена</th>
+              <th>Вес груза</th>
+              <th>Дата создания</th>
+              <th>Изменение статуса</th>
+              <th>Действия</th>
+            </tr>
+          </thead>
+          <tbody>
+            {orders.length > 0 ? (
+              orders.map((order) => {
+                const availableStatuses = getAvailableStatuses(order.status);
+
+                return (
+                  <tr key={order.id}>
+                    <td className={classes.orderId}>#{order.id}</td>
+                    <td className={classes.cargoTitle}>
+                      {order.cargos && order.cargos.length > 0
+                        ? order.cargos[0].title
+                        : "Нет данных"}
+                    </td>
+                    <td>
+                      <span
+                        className={`${classes.statusBadge} ${classes[order.status]}`}
+                      >
+                        {formatStatus(order.status)}
+                      </span>
+                    </td>
+                    <td>{order.date}</td>
+                    <td>{formatDeliveryType(order.typeDelivery)}</td>
+                    <td className={classes.price}>{order.price} ₽</td>
+                    <td>
+                      {order.cargos && order.cargos.length > 0
+                        ? `${order.cargos[0].weight} г`
+                        : "Нет данных"}
+                    </td>
+                    <td>
+                      {order.cargos && order.cargos.length > 0
+                        ? new Date(
+                            order.cargos[0].createdAt,
+                          ).toLocaleDateString("ru-RU")
+                        : "Нет данных"}
+                    </td>
+                    <td>
+                      {availableStatuses.length > 0 ? (
+                        <select
+                          onChange={(e) =>
+                            updateOrderStatus(order.id, e.target.value)
+                          }
+                          disabled={updatingOrderId === order.id}
+                          className={classes.statusSelect}
+                          value=""
+                        >
+                          <option value="">Изменить статус...</option>
+                          {availableStatuses.map((status) => (
+                            <option key={status} value={status}>
+                              {formatStatus(status)}
+                            </option>
+                          ))}
+                        </select>
+                      ) : (
+                        <span className={classes.noStatusChange}>
+                          Недоступно
+                        </span>
+                      )}
+                    </td>
+                    <td>
+                      <button
+                        className={classes.viewButton}
+                        onClick={() => console.log("Просмотр заказа", order.id)}
+                      >
+                        Подробнее
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })
+            ) : (
+              <tr>
+                <td colSpan="10" className={classes.noData}>
+                  Заказы не найдены
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 import axios from "axios";
+
+// Компонент для отображения пользовател
 
 // Компонент для отображения пользователей
 const UsersContent = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [updatingUserId, setUpdatingUserId] = useState(null);
 
   useEffect(() => {
     fetchUsers();
@@ -89,6 +300,34 @@ const UsersContent = () => {
       console.error("Ошибка при загрузке пользователей:", err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const updateUserRole = async (userId, newRole) => {
+    try {
+      setUpdatingUserId(userId);
+
+      const response = await axios.put(
+        `${API}/dotnet/api/admin/users/${userId}/role/${newRole}`,
+      );
+
+      // Обновляем данные пользователя после успешного изменения
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user.id === userId ? { ...user, role: newRole } : user,
+        ),
+      );
+
+      console.log(`Роль пользователя ${userId} изменена на ${newRole}`);
+    } catch (err) {
+      const errorMessage =
+        err.response?.data?.message ||
+        err.message ||
+        "Ошибка при изменении роли";
+      alert(errorMessage);
+      console.error("Ошибка при изменении роли:", err);
+    } finally {
+      setUpdatingUserId(null);
     }
   };
 
@@ -154,6 +393,7 @@ const UsersContent = () => {
               <th>Почта</th>
               <th>TG Token</th>
               <th>Роль</th>
+              <th>Действия</th>
               <th>Дата регистрации</th>
               <th>Подтвержден</th>
             </tr>
@@ -174,6 +414,24 @@ const UsersContent = () => {
                     </span>
                   </td>
                   <td>
+                    {user.role !== "worker" ? (
+                      <button
+                        onClick={() => updateUserRole(user.id, "worker")}
+                        disabled={updatingUserId === user.id}
+                        className={classes.roleButton}
+                        title="Сделать работником"
+                      >
+                        {updatingUserId === user.id ? (
+                          <span className={classes.miniSpinner}></span>
+                        ) : (
+                          "Сделать работником"
+                        )}
+                      </button>
+                    ) : (
+                      <span className={classes.alreadyWorker}>Работник</span>
+                    )}
+                  </td>
+                  <td>
                     {new Date(user.createdAt).toLocaleDateString("ru-RU")}
                   </td>
                   <td>
@@ -187,7 +445,7 @@ const UsersContent = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="7" className={classes.noData}>
+                <td colSpan="8" className={classes.noData}>
                   Пользователи не найдены
                 </td>
               </tr>
